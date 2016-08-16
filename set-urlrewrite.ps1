@@ -52,7 +52,7 @@ function Set-urlrewrite
     if ($RewriteReg -eq $true)
     {
         #Falls URL Rewrite vorhanden ist wird der Installationsschrit übersprungen
-        Write-Host -Object 'URL Rewrite IIS Module already installed. Skipping Step!' -ForegroundColor Green
+        Write-Host -Object 'URL Rewrite IIS Module already installed. Skipping this Step!' -ForegroundColor Green
     }
 
     else
@@ -110,6 +110,6 @@ function Set-urlrewrite
 
     Write-Host "All Done!" -ForegroundColor Green
 }
-
+#Ausführen
 Set-urlrewrite
 
