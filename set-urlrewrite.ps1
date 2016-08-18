@@ -30,6 +30,7 @@ function Set-urlrewrite
             Upcoming in next Release:
             -Bulk URL Rewrite für mehrere Webseiten
             -Validitätsprüfung ob Webseite vorhanden 
+            -Webseiten in Array speichern und auslesen
 
                  
         
@@ -74,7 +75,10 @@ function Set-urlrewrite
 
     
     #erlaubte Server Variablen ergänzen
-    Add-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $Site -Filter 'system.webServer/rewrite/allowedServerVariables' -Name '.' -Value @{
+    Add-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' 
+    -Location $Site -Filter 'system.webServer/rewrite/allowedServerVariables' 
+    -Name '.' 
+    -Value @{
         name = 'RESPONSE_SERVER'
     }
     Add-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' -Location $Site -Filter 'system.webServer/rewrite/allowedServerVariables' -Name '.' -Value @{
@@ -85,12 +89,30 @@ function Set-urlrewrite
     }
     
     #Outbound Regel für leeren Server-Header 
-    Add-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  -Filter 'system.webServer/rewrite/outboundRules' -Name '.' -Value @{
+    Add-WebConfigurationProperty 
+    -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  
+    -Filter 'system.webServer/rewrite/outboundRules' 
+    -Name '.' 
+    -Value @{
         name = 'IIS-SERVER-Header'
     }
-    Set-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  -Filter "system.webServer/rewrite/outboundRules/rule[@name='IIS-SERVER-Header']/match" -Name 'serverVariable' -Value 'RESPONSE_SERVER'
-    Set-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  -Filter "system.webServer/rewrite/outboundRules/rule[@name='IIS-SERVER-Header']/match" -Name 'pattern' -Value '.*'
-    Set-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  -Filter "system.webServer/rewrite/outboundRules/rule[@name='IIS-SERVER-Header']/action" -Name 'type' -Value 'Rewrite'
+    Set-WebConfigurationProperty 
+    -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  
+    -Filter "system.webServer/rewrite/outboundRules/rule[@name='IIS-SERVER-Header']/match" 
+    -Name 'serverVariable' 
+    -Value 'RESPONSE_SERVER'
+    
+    Set-WebConfigurationProperty 
+    -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  
+    -Filter "system.webServer/rewrite/outboundRules/rule[@name='IIS-SERVER-Header']/match" 
+    -Name 'pattern' 
+    -Value '.*'
+
+    Set-WebConfigurationProperty 
+    -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  
+    -Filter "system.webServer/rewrite/outboundRules/rule[@name='IIS-SERVER-Header']/action" 
+    -Name 'type' 
+    -Value 'Rewrite'
     
     #Outbound Regel für leeren ASPNET-Header
     Add-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST/$Site"  -Filter 'system.webServer/rewrite/outboundRules' -Name '.' -Value @{
@@ -110,6 +132,6 @@ function Set-urlrewrite
 
     Write-Host "All Done!" -ForegroundColor Green
 }
-#Ausführen
+#ausführen der function
 Set-urlrewrite
 
